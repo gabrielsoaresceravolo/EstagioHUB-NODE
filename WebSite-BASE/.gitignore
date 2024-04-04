@@ -128,3 +128,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# FireBase
+serviceAccountKey.json
+
+# ignore directories and files starting with a dot
+.*.swp
+.DS_Store

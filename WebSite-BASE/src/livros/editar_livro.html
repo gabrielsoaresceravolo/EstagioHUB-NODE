@@ -1,0 +1,22 @@
+
+<h3>Editar Livro</h3>
+<form action="/livros/editar" method="POST" >
+    <input type="hidden" class="form-control" id="id" name="id" placeholder="ID" value="{id}">
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome do Livro</label>
+        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do Livro" value="{nome}">
+    </div>
+    <div class="mb-3">
+        <label for="editora" class="form-label">Editora</label>
+        <input type="text" class="form-control" id="editora" name="editora" placeholder="Editora" value="{editora}">
+    </div>
+    <div class="mb-3">
+        <label for="genero" class="form-label">Gênero</label>
+        <input type="text" class="form-control" id="genero" name="genero" placeholder="Gênero" value="{genero}">
+    </div>
+    <div class="mb-3">
+        <label for="valor" class="form-label">Valor</label>
+        <input type="text" class="form-control" id="valor" name="valor" placeholder="Valor" value="{valor}">
+    </div>
+    <button type="submit" class="btn btn-warning">Alterar</button>
+</form>
