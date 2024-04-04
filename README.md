@@ -10,11 +10,11 @@ This project was created to learn how to manage a project with NODE
 
 <hr>
 
-Don't forget:
+### Don't forget:
 
-You should add a firebase database in livrosRouter.js
-Add the serviceAccountKey.json file to the project's root folder
+<p> You should add a firebase database in livrosRouter.js </p>
+<p> Add the serviceAccountKey.json file to the project's root folder </p>
 
-Install Express
+### Install Express
 
-and then run with ```NODE app.js``` the server will run on localhost:8080
+<p> Start Sever: ```NODE app.js``` the server will run on localhost:8080 </p>
