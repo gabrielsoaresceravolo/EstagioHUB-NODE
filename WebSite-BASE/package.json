@@ -1,6 +1,5 @@
 {
-  "dependencies": 
-  {
+  "dependencies": {
     "-": "^0.0.1",
     "express": "^4.18.3",
     "firebase-admin": "^12.0.0",
