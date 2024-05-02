@@ -4,7 +4,13 @@ const urlencodedParser = bodyParser.urlencoded({ extended: true });
 const express = require('express');
 const app = express();
 
-const admin = require("./firebase");
+var admin = require("firebase-admin");
+var serviceAccount = require("./serviceAccountKey.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://app-vanessa-js-default-rtdb.firebaseio.com"
+});
+
 const db = admin.database();
 
 function criarTabela(dados) {
@@ -49,10 +55,30 @@ app.get('/', (req, res) => {
         fs.readFile('src/rodape.html', (e, rodape) => {
             fs.readFile('src/livros/livros.html', (e, dados) => {
                 let tabela = "";
+                let mensagem = "";
                 const docLivros = db.ref("livros");
                 docLivros.once("value", function(snapshot){
                     tabela = criarTabela(snapshot.val());
                     dados = dados.toString().replace("{tabela}", tabela);
+                    if (req.query.acao){
+                        let acao = req.query.acao;
+                        if(req.query.status){
+                            let status = req.query.status;
+                            if (acao == "inserir" && status == "true")
+                                mensagem = "Livro inserido com sucesso!";
+                            else if (acao == "inserir" && status == "false")
+                                mensagem = "Erro ao inserir livro!";
+                            else if (acao == "editar" && status == "true")
+                                mensagem = "Livro alterado com sucesso!";
+                            else if (acao == "editar" && status == "false")
+                                mensagem = "Erro ao alterar livrvo!";
+                            else if (acao == "excluir" && status == "true")
+                                mensagem = "Livro excluido com sucesso!";
+                            else if (acao == "excluir" && status == "false")
+                                mensagem = "Erro ao excluir livro!";
+                        }
+                    }
+                    dados = dados.toString().replace("{mensagem}", mensagem)
                     res.writeHead(200, {'Content-Type': 'text/html'});
                     res.write(cabecalho + dados + rodape);
                     res.end();
@@ -86,8 +112,10 @@ app.post('/novo', urlencodedParser, (req, res) => {
             valor: req.body.valor
         };
         docLivro.set(livro);
-    }catch(e){
+        res.redirect("/livros/?acao=inserir&status=true");
+    } catch(e){
         console.log(e);
+        res.redirect("/livros/?acao=inserir&status=false");
     }
 });
 
@@ -119,21 +147,26 @@ app.get('/editar/:id', (req, res) => {
 
 // Rota da página para editar os dados de um registro de livro
 app.post('/editar', urlencodedParser, (req, res) => {
-    let id = req.body.id;
-    let nome = req.body.nome;
-    let genero = req.body.genero;
-    let editora = req.body.editora;
-    let valor = req.body.valor;
-    let docLivro = db.ref("livros");
-    docLivro.child(id).update(
-        {
-            'nome': nome,
-            'genero': genero,
-            'editora' : editora,
-            'valor' : valor
-        }
-    );
-    res.redirect("/livros");
+    try{
+        let id = req.body.id;
+        let nome = req.body.nome;
+        let genero = req.body.genero;
+        let editora = req.body.editora;
+        let valor = req.body.valor;
+        let docLivro = db.ref("livros");
+        docLivro.child(id).update(
+            {
+                'nome': nome,
+                'genero': genero,
+                'editora' : editora,
+                'valor' : valor
+            }
+        );
+        res.redirect("/livros/?acao=editar&status=true");
+    } catch(e) {
+        console.log(e);
+        res.redirect("/livros/?acao=editar&status=false");
+    }
 });
 
 // Rota da página para abrir formulário para excluir um registro de um livro
@@ -164,10 +197,16 @@ app.get('/excluir/:id', (req, res) => {
 
 // Rota da página para excluir um registro de um livro
 app.post('/excluir', urlencodedParser, (req, res) => {
-    let id = req.body.id;
-    const docLivro = db.ref("livros/"+id);
-    docLivro.remove();
-    res.redirect("/livros");
+    try{
+        let id = req.body.id;
+        const docLivro = db.ref("livros/"+id);
+        docLivro.remove();
+        res.redirect("/livros/?acao=excluir&status=true");
+    } catch(e) {
+        console.log(e);
+        res.redirect("/livros/?acao=excluir&status=false");
+    }
+    
 });
 
 module.exports = app;
