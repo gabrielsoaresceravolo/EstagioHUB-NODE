@@ -1,0 +1,57 @@
+</main>
+
+<!-- Bootstrap Bundle com Popper -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<!-- Google Charts -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    // Carrega a API do Google Charts
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Callback para a função drawChart()
+    google.charts.setOnLoadCallback(drawCharts);
+
+    // Função para desenhar os gráficos
+    function drawCharts() {
+        // Dados fictícios para os gráficos
+        var livrosData = google.visualization.arrayToDataTable([
+            ['Mês', 'Quantidade de Livros Vendidos'],
+            ['Janeiro', 100],
+            ['Fevereiro', 150],
+            ['Março', 200],
+            ['Abril', 180],
+            ['Maio', 220],
+            ['Junho', 250]
+        ]);
+
+        var comprasData = google.visualization.arrayToDataTable([
+            ['Dia', 'Quantidade de Compras'],
+            ['Segunda', 30],
+            ['Terça', 40],
+            ['Quarta', 35],
+            ['Quinta', 50],
+            ['Sexta', 45],
+            ['Sábado', 60],
+            ['Domingo', 55]
+        ]);
+
+        // Opções para os gráficos
+        var livrosOptions = {
+            title: 'Quantidade de Livros Vendidos por Mês'
+        };
+
+        var comprasOptions = {
+            title: 'Quantidade de Compras na Semana Corrente'
+        };
+
+        // Desenha os gráficos
+        var livrosChart = new google.visualization.ColumnChart(document.getElementById('livros-chart'));
+        livrosChart.draw(livrosData, livrosOptions);
+
+        var comprasChart = new google.visualization.ColumnChart(document.getElementById('compras-chart'));
+        comprasChart.draw(comprasData, comprasOptions);
+    }
+</script>
+</body>
+</html>
