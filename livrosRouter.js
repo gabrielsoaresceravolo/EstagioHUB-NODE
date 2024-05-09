@@ -4,13 +4,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: true });
 const express = require('express');
 const app = express();
 
-var admin = require("firebase-admin");
-var serviceAccount = require("./serviceAccountKey.json");
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://app-vanessa-js-default-rtdb.firebaseio.com"
-});
-
+const admin = require("./firebase");
 const db = admin.database();
 
 function criarTabela(dados) {
@@ -46,8 +40,6 @@ function criarTabela(dados) {
             </table > `;
     return tabela;
 }
-
-
 
 // Rota da página que exibe os livros registrados no banco de dados
 app.get('/', (req, res) => {

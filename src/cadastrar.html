@@ -12,9 +12,8 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card">
-          <div class="card-header">Acesso - Sistema BookSell</div>
+          <div class="card-header">Cadastrar - Sistema BookSell</div>
           <div class="card-body">
-            <form action="/acessar" method="POST">
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="Digite seu email">
@@ -24,10 +23,17 @@
                 <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha">
               </div>
               <div class="mb-3">
-                <p>Ainda não tem uma conta? <a href="/cadastrar">Crie uma Conta</a></p>
+                <label for="tipo" class="form-label">Tipo de Usuário</label>
+                <select class="form-select" id="tipo" name="tipo">
+                  <option value="aluno">Aluno</option>
+                  <option value="empresa">Empresa</option>
+                  <option value="professor">Professor (Admin)</option>
+                </select>
               </div>
-              <button type="submit" class="btn btn-primary">Acessar</button>
-            </form>
+              <div class="mb-3">
+                <p>Ja possui uma conta? <a href="/">Acessar sua Conta</a></p>
+              </div>
+              <button type="button" class="btn btn-primary">Cadastrar</button>
           </div>
         </div>
       </div>
@@ -40,12 +46,10 @@
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
 
-  <!-- Script para poder criar o cadastro de autenticação do usuarios -->
   <script>
-
     // import { initializeApp }
     // import { auth }
-    
+
     require('dotenv').config();
 
     const firebaseConfig = {
@@ -61,10 +65,12 @@
   
     firebase.initializeApp(firebaseConfig);
 
-    function acessar(){
+    function cadastrarUsuario()
+    {
 
         let email = document.getElementById("email").value;
         let senha = document.getElementById("senha").value;
+        let tipo = document.getElementById("tipo").value;
         
         // Função para validar o formato do email
         function validarEmail(email) {
@@ -78,15 +84,27 @@
             return;
         }
 
-        firebase.auth().singInWithEmailAndPassword(email, senha)
+        // Validar a senha
+        if (senha.length < 6) {
+            alert("A senha deve ter pelo menos 6 caracteres!");
+            return;
+        }
+
+        firebase.auth().createUserWithEmailAndPassword(email, senha)
         .then((userCredential) => {
-            userCredential.user.getIdToken().then((token) => {
-              window.location.href = "/acessar?token=" + token;
-            }) 
+            return firebase.database().ref("users/" + userCredential.user.uid).set({
+                email: email,
+                tipo: tipo
+            });
+        })
+        .then(() => {
+            alert("Usuário registrado com sucesso como " + tipo);
+            window.location.href = "/";
         })
         .catch((error) => {
-            alert("Nome de usuario e/ou senha invalidos!")
+            alert("Erro ao registrar o usuário: " + error);
         });
+
     }
   </script>
 

@@ -129,9 +129,15 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# FireBase
-serviceAccountKey.json
-
 # ignore directories and files starting with a dot
 .*.swp
 .DS_Store
+
+# ===================================================================================================
+
+# FireBase and Configurations
+serviceAccountKey.json
+.env
+
+
+
