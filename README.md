@@ -4,17 +4,17 @@
 
 ![developing](http://img.shields.io/static/v1?label=STATUS&message=DEVELOPING&color=yellow&style=for-the-badge)
 
-### Description about the repository: 
+### Description about the repository
 
-This project was created to learn how to manage a project with NODE
+This project was created to learn how to manage a project with Node.js
 
 <hr>
 
-### Don't forget:
+### Don't forget
 
-<p> You should add a firebase database in livrosRouter.js </p>
-<p> Add the serviceAccountKey.json file to the project's root folder </p>
+- Add the `serviceAccountKey.json` file to the project's root folder
+- Use the `npm update` command before starting the server to ensure all dependencies are up to date before running
 
-### Install Express
-
-<p> Start Sever: ```NODE app.js``` the server will run on localhost:8080 </p>
+### Start the server:
+```bash
+NODE app.js
