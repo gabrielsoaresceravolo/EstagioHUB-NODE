@@ -1,53 +1,52 @@
 const fs = require('fs');
+const bodyParser = require('body-parser');
+const urlencodedParser = bodyParser.urlencoded({extended: true});
 const express = require('express');
 const session = require('express-session');
-const bodyParser = require('body-parser');
-const admin = require("./firebase");
-
 const app = express();
-const port = 3000;
+const port = 8080;
 
-// Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-    secret: 'jgkagsdakg1u41t28361239209@4l21g3',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
+    'secret' : 'gdaskjdasjdha8219391273dsadsa',
+    'resave' : false,
+    'saveUninitialized' : true,
+    'cookie': {secure: false}
 }));
 
-// Utility function to verify token
-async function verificaToken(token) {
-    try {
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        return true;
-    } catch (error) {
-        return false;
-    }
+var admin = require("./firebase");
+const db = admin.database();
+
+async function verificaToken(token){
+    let status;
+    await admin.auth().verifyIdToken(token)
+        .then((decodedToken) => {
+            status = true;
+        })
+        .catch((error) => {
+            status = false;
+        });
+    return status;
 }
 
-// Start server
+
+// Inicia o servidor na porta especificada
 app.listen(port, () => {
-    console.log('Server iniciado na porta: ', port);
+    console.log('Servidor iniciado na porta: 8080!');
 });
 
-// Route for login form
+// Rota da página de formulário de login
 app.get('/', (req, res) => {
-    fs.readFile('src/login.html', (err, data) => {
-        if (err) {
-            console.error('Error reading login.html:', err);
-            return res.status(500).send('Internal Server Error');
-        }
+    fs.readFile('src/login.html', (e, dados) => {
         res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
+        res.write(dados);
         res.end();
     });
 });
 
-// Route for accessing main page
-app.get('/acessar', async (req, res) => {
-    const token = req.query.token;
-    if (await verificaToken(token)) {
+// Rota da página principal
+app.get('/acessar', (req, res) => {
+    let token = req.query.token;
+    if (verificaToken(token)){
         req.session.authToken = token;
         res.redirect("/home");
     } else {
@@ -55,43 +54,27 @@ app.get('/acessar', async (req, res) => {
     }
 });
 
-// Route for registering new user
+//Rota para cadastrar novo usuário
 app.get('/cadastrar', (req, res) => {
-    fs.readFile('src/cadastrar.html', (err, data) => {
-        if (err) {
-            console.error('Error reading cadastrar.html:', err);
-            return res.status(500).send('Internal Server Error');
-        }
+    fs.readFile('src/cadastrar.html', (e, dados) => {
         res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
+        res.write(dados);
         res.end();
     });
 });
 
-// Route for logout
+// Rota da página de logout
 app.get('/sair', (req, res) => {
     delete req.session.authToken;
     res.redirect('/');
 });
 
-// Route for home page
+// Rota da página inicial
 app.get('/home', (req, res) => {
-    if (req.session.authToken) {
-        fs.readFile('src/cabecalho.html', (err1, cabecalho) => {
-            if (err1) {
-                console.error('Error reading cabecalho.html:', err1);
-                return res.status(500).send('Internal Server Error');
-            }
-            fs.readFile('src/rodape.html', (err2, rodape) => {
-                if (err2) {
-                    console.error('Error reading rodape.html:', err2);
-                    return res.status(500).send('Internal Server Error');
-                }
-                fs.readFile('src/index.html', (err3, dados) => {
-                    if (err3) {
-                        console.error('Error reading index.html:', err3);
-                        return res.status(500).send('Internal Server Error');
-                    }
+    if (req.session.authToken){
+        fs.readFile('src/cabecalho.html', (e, cabecalho) => {
+            fs.readFile('src/rodape.html', (e, rodape) => {
+                fs.readFile('src/index.html', (e, dados) => {
                     res.writeHead(200, {'Content-Type': 'text/html'});
                     res.write(cabecalho + dados + rodape);
                     res.end();
@@ -103,6 +86,8 @@ app.get('/home', (req, res) => {
     }
 });
 
-// Mounting livrosRouter
 const livrosRouter = require("./livrosRouter");
 app.use("/livros", livrosRouter);
+
+const comprasRouter = require("./comprasRouter");
+app.use("/compras", comprasRouter);

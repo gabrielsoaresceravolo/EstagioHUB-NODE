@@ -24,7 +24,7 @@
                 <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha">
               </div>
               <div class="mb-3">
-                <p>Ainda não tem uma conta? <a href="/cadastrar">Crie uma Conta</a></p>
+                <p>Ainda não tem conta? Clique <a href="/cadastrar">aqui</a> para se cadastrar!</p>
               </div>
               <button type="submit" class="btn btn-primary">Acessar</button>
             </form>
@@ -37,57 +37,40 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
-
-  <!-- Script para poder criar o cadastro de autenticação do usuarios -->
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+  
   <script>
 
-    // import { initializeApp }
-    // import { auth }
-    
-    require('dotenv').config();
+const firebaseConfig = {
+  apiKey: "AIzaSyAQqnftStx4RNhf8b9cB7U9u_m5K4FqKzY",
+  authDomain: "app-node-js-fatec-01.firebaseapp.com",
+  databaseURL: "https://app-node-js-fatec-01-default-rtdb.firebaseio.com",
+  projectId: "app-node-js-fatec-01",
+  storageBucket: "app-node-js-fatec-01.appspot.com",
+  messagingSenderId: "850461398076",
+  appId: "1:850461398076:web:3a028cd555646a58899f39",
+  measurementId: "G-ZQYSDVNFYC"
+};
 
-    const firebaseConfig = {
-        apiKey: process.env.apiKey,
-        authDomain: process.env.authDomain,
-        databaseURL: process.env.databaseURL,
-        projectId: process.env.projectId,
-        storageBucket: process.env.storageBucket,
-        messagingSenderId: process.env.messagingSenderId,
-        appId: process.env.appId,
-        measurementId: process.env.measurementId
-    };
-  
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
 
     function acessar(){
+      let email = document.getElementById("email").value;
+      let senha = document.getElementById("senha").value;
 
-        let email = document.getElementById("email").value;
-        let senha = document.getElementById("senha").value;
-        
-        // Função para validar o formato do email
-        function validarEmail(email) {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return regex.test(email);
-        }
-
-        // Validar o email
-        if (!validarEmail(email)) {
-            alert("Por favor, insira um endereço de email válido!");
-            return;
-        }
-
-        firebase.auth().singInWithEmailAndPassword(email, senha)
+      firebase.auth().signInWithEmailAndPassword(email, senha)
         .then((userCredential) => {
-            userCredential.user.getIdToken().then((token) => {
-              window.location.href = "/acessar?token=" + token;
-            }) 
+          userCredential.user.getIdToken().then((token) => {
+            window.location.href = "/acessar?token="+token;
+          });
         })
         .catch((error) => {
-            alert("Nome de usuario e/ou senha invalidos!")
+          alert("Nome de usuário e/ou senha inválidos!");
         });
     }
+
   </script>
 
 </body>

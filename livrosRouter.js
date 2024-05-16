@@ -4,7 +4,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: true });
 const express = require('express');
 const app = express();
 
-const admin = require("./firebase");
+var admin = require("./firebase");
 const db = admin.database();
 
 function criarTabela(dados) {
@@ -54,23 +54,23 @@ app.get('/', (req, res) => {
                     dados = dados.toString().replace("{tabela}", tabela);
                     if (req.query.acao){
                         let acao = req.query.acao;
-                        if(req.query.status){
+                        if (req.query.status){
                             let status = req.query.status;
                             if (acao == "inserir" && status == "true")
                                 mensagem = "Livro inserido com sucesso!";
                             else if (acao == "inserir" && status == "false")
                                 mensagem = "Erro ao inserir livro!";
                             else if (acao == "editar" && status == "true")
-                                mensagem = "Livro alterado com sucesso!";
+                                mensagem = "Livro editado com sucesso!";
                             else if (acao == "editar" && status == "false")
-                                mensagem = "Erro ao alterar livrvo!";
+                                mensagem = "Erro ao editar o livro!";
                             else if (acao == "excluir" && status == "true")
-                                mensagem = "Livro excluido com sucesso!";
+                                mensagem = "Livro excluído com sucesso!";
                             else if (acao == "excluir" && status == "false")
                                 mensagem = "Erro ao excluir livro!";
                         }
                     }
-                    dados = dados.toString().replace("{mensagem}", mensagem)
+                    dados = dados.toString().replace("{mensagem}", mensagem);
                     res.writeHead(200, {'Content-Type': 'text/html'});
                     res.write(cabecalho + dados + rodape);
                     res.end();
@@ -101,11 +101,12 @@ app.post('/novo', urlencodedParser, (req, res) => {
             nome: req.body.nome,
             editora: req.body.editora,
             genero: req.body.genero,
-            valor: req.body.valor
+            valor: req.body.valor,
+            status: "true"
         };
         docLivro.set(livro);
         res.redirect("/livros/?acao=inserir&status=true");
-    } catch(e){
+    }catch(e){
         console.log(e);
         res.redirect("/livros/?acao=inserir&status=false");
     }
@@ -155,7 +156,7 @@ app.post('/editar', urlencodedParser, (req, res) => {
             }
         );
         res.redirect("/livros/?acao=editar&status=true");
-    } catch(e) {
+    } catch (e){
         console.log(e);
         res.redirect("/livros/?acao=editar&status=false");
     }
@@ -194,11 +195,10 @@ app.post('/excluir', urlencodedParser, (req, res) => {
         const docLivro = db.ref("livros/"+id);
         docLivro.remove();
         res.redirect("/livros/?acao=excluir&status=true");
-    } catch(e) {
+    } catch(e){
         console.log(e);
-        res.redirect("/livros/?acao=excluir&status=false");
+        res.redirect("/livros/?acao=excluir&status=false")
     }
-    
 });
 
 module.exports = app;

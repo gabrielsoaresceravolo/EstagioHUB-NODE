@@ -1,0 +1,110 @@
+<h3>Compras de Livros</h3>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comprarModal">Nova compra </button>
+
+<!-- Modal -->
+<div class="modal modal-lg fade" id="comprarModal" tabindex="-1" aria-labelledby="comprarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="comprarModalLabel">Comprar Livros</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+                <label for="data" class="form-label">Informe a Data</label>
+                <input type="date" class="form-control" id="data" name="data">
+            </div>
+            <div class="col">
+                <label for="responsavel" class="form-label">Nome do Responsavel</label>
+                <input type="text" class="form-control" id="responsavel" name="responsavel">
+            </div>
+            <div class="col-2 d-flex align-items-end">
+                <button type="button" class="btn btn-success" id="btnNovaCompra">Registrar</button>
+            </div>
+          </div>
+          <div class="row border-top border-bottom mt-3 mb-3 pt-3 pb-3 d-none" id="item-livro">
+            <div class="col">
+                <label for="livros" class="form-label">Selecione o Livro</label>
+                <select class="form-select" id="livros">
+                    <option value="" disabled>Selecione um Livro</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="valor" class="form-label">Valor</label>
+                <input type="text" class="form-control" id="valors">
+            </div>
+            <div class="col">
+                <label for="qtd" class="form-label">Valor</label>
+                <input type="text" class="form-control" id="qtd">
+            </div>
+            <div class="col-1 d-flex align-items-end">
+                <button type="button" class="btn btn-warning" id="btnAddProduto">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toastNovaCompra" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Mensagem do Servidor</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Registro Criado!
+            </div>
+        </div>
+    </div>
+
+
+  <script>
+
+    const toastTrigger = document.getElementById('btnNovaCompra')
+    const toastLive = document.getElementById('toastNovaCompra')
+
+    if (toastTrigger) 
+    {
+        toastTrigger.addEventListener('click', () => 
+        {
+            let data = document.getElementById("data").value;
+            let responsavel = document.getElementById("responsavel").value;
+            let url = `/compras/novo?data=${encodeURIComponent(data)}&responsavel=${encodeURIComponent(responsavel)}`;
+
+            fetch(url).then(function(response){
+                return response.json();
+            }).then(function(data){
+                const toast = new bootstrap.Toast(toastLive)
+                let elemento = document.getElementById("item-livro");
+                elemento.classList.remove('d-none');
+                toast.show()
+            })
+        })
+    }
+
+    fetch('/compras/livros')
+    .then(function(response){
+        return response.json();
+    })
+    .then(function(data){
+        let listaLivros = document.getElementById("livros");
+        Object.keys(data).forEach(function(key){
+            let option = document.createElement('option');
+            option.value = key;
+            option.textContent = data[key].nome;
+            listaLivros.appendChild(option);
+        })
+    })
+
+  </script>

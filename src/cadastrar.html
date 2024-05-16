@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card">
-          <div class="card-header">Cadastrar - Sistema BookSell</div>
+          <div class="card-header">Cadastro - Sistema BookSell</div>
           <div class="card-body">
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -23,17 +23,16 @@
                 <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha">
               </div>
               <div class="mb-3">
-                <label for="tipo" class="form-label">Tipo de Usuário</label>
-                <select class="form-select" id="tipo" name="tipo">
-                  <option value="aluno">Aluno</option>
-                  <option value="empresa">Empresa</option>
-                  <option value="professor">Professor (Admin)</option>
+                <label for="nivel">Nível</label>
+                <select id="nivel" class="form-control">
+                  <option value="Funcionário">Funcionário</option>
+                  <option value="Administrador">Administrador</option>
                 </select>
               </div>
               <div class="mb-3">
-                <p>Ja possui uma conta? <a href="/">Acessar sua Conta</a></p>
+                <p>Já tem conta? Clique <a href="/">aqui</a> para acessar!</p>
               </div>
-              <button type="button" class="btn btn-primary">Cadastrar</button>
+              <button type="button" class="btn btn-primary" onclick="cadastrarUsuario()">Cadastrar</button>
           </div>
         </div>
       </div>
@@ -43,69 +42,41 @@
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
   <script>
-    // import { initializeApp }
-    // import { auth }
-
-    require('dotenv').config();
 
     const firebaseConfig = {
-        apiKey: process.env.apikey,
-        authDomain: process.env.authDomain,
-        databaseURL: process.env.databaseURL,
-        projectId: process.env.projectId,
-        storageBucket: process.env.storageBucket,
-        messagingSenderId: process.env.messagingSenderId,
-        appId: process.env.appId,
-        measurementId: process.env.measurementId
+      apiKey: "AIzaSyA0ciq-Oe9y37BvKOxAABNDZJ78WBHxu6E",
+      authDomain: "app-vanessa-js.firebaseapp.com",
+      databaseURL: "https://app-vanessa-js-default-rtdb.firebaseio.com",
+      projectId: "app-vanessa-js",
+      storageBucket: "app-vanessa-js.appspot.com",
+      messagingSenderId: "764305062000",
+      appId: "1:764305062000:web:17d8f4602fbe0c98c2dcb5"
     };
-  
+
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
 
-    function cadastrarUsuario()
-    {
-
-        let email = document.getElementById("email").value;
-        let senha = document.getElementById("senha").value;
-        let tipo = document.getElementById("tipo").value;
-        
-        // Função para validar o formato do email
-        function validarEmail(email) {
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return regex.test(email);
-        }
-
-        // Validar o email
-        if (!validarEmail(email)) {
-            alert("Por favor, insira um endereço de email válido!");
-            return;
-        }
-
-        // Validar a senha
-        if (senha.length < 6) {
-            alert("A senha deve ter pelo menos 6 caracteres!");
-            return;
-        }
-
-        firebase.auth().createUserWithEmailAndPassword(email, senha)
+    function cadastrarUsuario(){
+      let email = document.getElementById("email").value;
+      let senha = document.getElementById("senha").value;
+      let nivel = document.getElementById("nivel").value;
+      firebase.auth().createUserWithEmailAndPassword(email, senha)
         .then((userCredential) => {
-            return firebase.database().ref("users/" + userCredential.user.uid).set({
-                email: email,
-                tipo: tipo
-            });
-        })
-        .then(() => {
-            alert("Usuário registrado com sucesso como " + tipo);
-            window.location.href = "/";
+          firebase.database().ref("Usuarios").push({
+            "Email": email,
+            "Nivel": nivel
+          });
+          alert("Usuário registrado!");
+          window.location.href = "/";
         })
         .catch((error) => {
-            alert("Erro ao registrar o usuário: " + error);
+          alert("Erro ao inserir usuário:"+error);
         });
-
     }
+
   </script>
 
 </body>
