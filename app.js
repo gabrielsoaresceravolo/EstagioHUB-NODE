@@ -6,6 +6,10 @@ const session = require('express-session');
 const app = express();
 const port = 8080;
 
+app.use(express.static('public'));
+
+// =====================================================================================
+
 app.use(session({
     'secret' : 'gdaskjdasjdha8219391273dsadsa',
     'resave' : false,
@@ -13,28 +17,39 @@ app.use(session({
     'cookie': {secure: false}
 }));
 
+// =====================================================================================
+
 var admin = require("./firebase");
 const db = admin.database();
 
-async function verificaToken(token){
+// =====================================================================================
+
+async function verificaToken(token)
+{
     let status;
     await admin.auth().verifyIdToken(token)
-        .then((decodedToken) => {
+        .then((decodedToken) => 
+        {
             status = true;
         })
-        .catch((error) => {
+        .catch((error) => 
+        {
             status = false;
         });
     return status;
 }
 
+// =====================================================================================
+
 
 // Inicia o servidor na porta especificada
 app.listen(port, () => {
-    console.log('Servidor iniciado na porta: 8080!');
+    console.log('\nIniciando Servidor...\n'+'\nServidor iniciado com sucesso!\n'+'porta de acesso: 8080\n');
 });
 
-// Rota da página de formulário de login
+// =====================================================================================
+
+// Rota - FAZER LOGIN
 app.get('/', (req, res) => {
     fs.readFile('src/login.html', (e, dados) => {
         res.writeHead(200, {'Content-Type': 'text/html'});
@@ -43,7 +58,7 @@ app.get('/', (req, res) => {
     });
 });
 
-// Rota da página principal
+// Rota - HOME
 app.get('/acessar', (req, res) => {
     let token = req.query.token;
     if (verificaToken(token)){
@@ -63,11 +78,15 @@ app.get('/cadastrar', (req, res) => {
     });
 });
 
-// Rota da página de logout
+// =====================================================================================
+
+// Rota - LOGOUT
 app.get('/sair', (req, res) => {
     delete req.session.authToken;
     res.redirect('/');
 });
+
+// =====================================================================================
 
 // Rota da página inicial
 app.get('/home', (req, res) => {

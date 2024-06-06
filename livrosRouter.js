@@ -7,7 +7,8 @@ const app = express();
 var admin = require("./firebase");
 const db = admin.database();
 
-function criarTabela(dados) {
+function criarTabela(dados) 
+{
     let tabela = `<table class="table table-striped zebrado">
                     <thead>
                         <tr>
@@ -21,7 +22,9 @@ function criarTabela(dados) {
                         </tr>
                     </thead>
                     <tbody>`;
-    for (let chave in dados) {
+
+    for (let chave in dados) 
+    {
         tabela += `<tr>
                         <td>${chave}</td>
                         <td>${dados[chave].nome}</td>
@@ -35,9 +38,11 @@ function criarTabela(dados) {
                             <a class="btn btn-outline-danger" href="/livros/excluir/${chave}">Excluir</a>
                         </td>
                     </tr>`;
-    }            
+    }
+
     tabela += `</tbody >
             </table > `;
+            
     return tabela;
 }
 
