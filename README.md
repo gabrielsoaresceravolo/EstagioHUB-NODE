@@ -12,10 +12,19 @@ This repository was created to learn how to create and manage a NODE application
 
 ### Don't forget:
 
-<p> You should add a firebase database in livrosRouter.js </p>
-<p> Add the serviceAccountKey.json file to the project's root folder </p>
-<p> Update the packages used in the project with the command: ```npm install```
+<li> You should add a firebase database in livrosRouter.js </li>
+<li> Add the serviceAccountKey.json file to the project's root folder </li>
+
+<br>
+
+### Update the packages used in the project
+  
+```
+npm install
+```
 
 ### Start Sever
 
-<p> ```node app.js``` the server will run on localhost:8080 </p>
+```
+node app.js
+```
