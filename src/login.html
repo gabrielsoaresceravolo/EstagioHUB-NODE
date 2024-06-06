@@ -77,22 +77,15 @@
       let email = document.getElementById("email").value;
       let senha = document.getElementById("senha").value;
 
-      if (email === "" || senha === "") {
-        alert("Por favor, preencha todos os campos!");
-        return false;
-      }
-
-      return true;
-
       firebase.auth().signInWithEmailAndPassword(email, senha)
-      .then((userCredential) => {
-        userCredential.user.getIdToken().then((token) => {
-          window.location.href = "/acessar?token="+token;
+        .then((userCredential) => {
+          userCredential.user.getIdToken().then((token) => {
+            window.location.href = "/acessar?token="+token;
+          });
+        })
+        .catch((error) => {
+          alert("Nome de usuário e/ou senha inválidos!");
         });
-      })
-      .catch((error) => {
-        alert("Nome de usuário e/ou senha inválidos!");
-      });
     }
 
   </script>

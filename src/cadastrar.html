@@ -15,49 +15,41 @@
       box-shadow: none;
     }
   </style>
-
 </head>
-<body>
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
 
-        <div class="card">
-          <div class="card-header bg-danger text-light text-center display-4 d-flex align-items-center justify-content-center">
-            <div class="d-flex align-items-center mx-2">
-              <img src="/images/logo.svg" class="img-fluid" alt="logo">
-              <p class="mb-0">EstagioHub</p>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+
+          <div class="card">
+            <div class="card-header bg-danger text-light text-center display-4 d-flex align-items-center justify-content-center">
+              <div class="d-flex align-items-center mx-2">
+                <img src="/images/logo.svg" class="img-fluid" alt="logo">
+                <p class="mb-0">EstagioHub</p>
+              </div>
             </div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control focus-danger" id="email" name="email" placeholder="Digite seu email" required>
+              </div>
+              <div class="mb-3">
+                <label for="senha" class="form-label">Senha</label>
+                <input type="password" class="form-control focus-danger" id="senha" name="senha" placeholder="Digite sua senha" required>
+              </div>
+              <div class="mb-3">
+                <label for="nivel">Nível</label>
+                <select id="nivel" class="form-control">
+                  <option value="Funcionario">Funcionário</option>
+                  <option value="Administrador">Administrador</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <p>Ja tem uma conta Cadastrada? <a href="/" class="text-danger">Acessar o Site</a></p>
+              </div>
+              <button type="button" class="btn btn-danger w-100" onclick="cadastrarUsuario()">Cadastrar</button>
           </div>
-          <div class="card-body">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control focus-danger" id="email" name="email" placeholder="Digite seu email" required>
-            </div>
-            <div class="mb-3">
-              <label for="senha" class="form-label">Senha</label>
-              <input type="password" class="form-control focus-danger" id="senha" name="senha" placeholder="Digite sua senha" required>
-            </div>
-            <div class="mb-3">
-              <label for="senha-confirmar" class="form-label">Confirmar Senha</label>
-              <input type="password" class="form-control focus-danger" id="senha-confirmar" name="senha-confirmar" placeholder="Confirme sua senha" required>
-            </div>
-            <div class="mb-3">
-              <label for="nivel" class="form-label">Nível de Usuário</label>
-
-              <select id="nivel" class="form-control focus-danger" placeholder="Nível de Usuário do sistema" required>
-                <option disabled selected>Selecione o Nível de Usuário</option>
-                <option value="Coordenador">Coordenador</option> <!--Funcionario-->
-                <option value="Administrador">Administrador</option>
-                <option value="Aluno">Aluno</option>
-              </select>
-
-            </div>
-            <div class="mb-3">
-              <p>Ja tem uma conta Cadastrada? <a href="/" class="text-danger">Acessar o Site</a></p>
-            </div>
-            <button type="button" class="btn btn-danger w-100" onclick="cadastrarUsuario()">Cadastrar</button>
-        </div>
         </div>
 
       </div>
@@ -69,61 +61,40 @@
 
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
   <script>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAQqnftStx4RNhf8b9cB7U9u_m5K4FqKzY",
-    authDomain: "app-node-js-fatec-01.firebaseapp.com",
-    databaseURL: "https://app-node-js-fatec-01-default-rtdb.firebaseio.com",
-    projectId: "app-node-js-fatec-01",
-    storageBucket: "app-node-js-fatec-01.appspot.com",
-    messagingSenderId: "850461398076",
-    appId: "1:850461398076:web:3a028cd555646a58899f39",
-    measurementId: "G-ZQYSDVNFYC"
-
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQqnftStx4RNhf8b9cB7U9u_m5K4FqKzY",
+      authDomain: "app-node-js-fatec-01.firebaseapp.com",
+      databaseURL: "https://app-node-js-fatec-01-default-rtdb.firebaseio.com",
+      projectId: "app-node-js-fatec-01",
+      storageBucket: "app-node-js-fatec-01.appspot.com",
+      messagingSenderId: "850461398076",
+      appId: "1:850461398076:web:3a028cd555646a58899f39",
+      measurementId: "G-ZQYSDVNFYC"
+    };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
 
-    function cadastrarUsuario()
-    {
+    function cadastrarUsuario(){
       let email = document.getElementById("email").value;
       let senha = document.getElementById("senha").value;
-      let confirmar = document.getElementById("senha-confirmar").value;
       let nivel = document.getElementById("nivel").value;
-
-      // Verifica se todos os campos foram preenchidos
-      if (!email || !senha || !nivel || !confirmar) 
-      {
-        alert("Por favor, preencha todos os campos!");
-        return false;
-      }
-
-      // Verifica se as senhas coincidem
-      if (senha !== confirmar)
-      {
-        alert("As senhas não coincidem!");
-        return false;
-      }
-
-      email = email.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      senha = senha.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
       firebase.auth().createUserWithEmailAndPassword(email, senha)
-      .then((userCredential) => {
-        firebase.database().ref("Usuarios").push({
-          "Email": email,
-          "Nivel": nivel
+        .then((userCredential) => {
+          firebase.database().ref("Usuarios").push({
+            "Email": email,
+            "Nivel": nivel
+          });
+          alert("Usuário registrado!");
+          window.location.href = "/";
+        })
+        .catch((error) => {
+          alert("Erro ao inserir usuário:"+error);
         });
-        alert("Usuário registrado!");
-        window.location.href = "/";
-      })
-      .catch((error) => {
-        alert("Erro ao inserir usuário:"+error.message);
-      });
     }
+
   </script>
 
 </body>

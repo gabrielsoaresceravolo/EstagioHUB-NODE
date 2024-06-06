@@ -1,110 +1,162 @@
-<h3>Compras de Livros</h3>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#comprarModal">Nova compra </button>
+<h3> Compras de Livros </h3>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" 
+    data-bs-target="#compraModal">
+    Nova Compra
+</button>
 
 <!-- Modal -->
-<div class="modal modal-lg fade" id="comprarModal" tabindex="-1" aria-labelledby="comprarModalLabel" aria-hidden="true">
+<div class="modal modal-lg fade" id="compraModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="comprarModalLabel">Comprar Livros</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Comprar Livros</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-
         <div class="modal-body">
           <div class="row">
             <div class="col">
-                <label for="data" class="form-label">Informe a Data</label>
+                <label for="data" class="form-label">Informe a data:</label>
                 <input type="date" class="form-control" id="data" name="data">
             </div>
             <div class="col">
-                <label for="responsavel" class="form-label">Nome do Responsavel</label>
-                <input type="text" class="form-control" id="responsavel" name="responsavel">
+                <label for="responsavel" class="form-label">Informe o nome do responsável:</label>
+                <input type="text" class="form-control" name="responsavel" id="responsavel">
             </div>
             <div class="col-2 d-flex align-items-end">
-                <button type="button" class="btn btn-success" id="btnNovaCompra">Registrar</button>
+                <button type="button" class="btn btn-success" id="btnNovaCompra">
+                    Registrar
+                </button>
             </div>
           </div>
           <div class="row border-top border-bottom mt-3 mb-3 pt-3 pb-3 d-none" id="item-livro">
+            <input type="hidden" id="idCompra"/>
             <div class="col">
-                <label for="livros" class="form-label">Selecione o Livro</label>
+                <label for="livros" class="form-label"> Selecione o livro:</label>
                 <select class="form-select" id="livros">
-                    <option value="" disabled>Selecione um Livro</option>
+                    <option value="" disabled selected>Selecione um livro</option>
                 </select>
             </div>
             <div class="col">
-                <label for="valor" class="form-label">Valor</label>
-                <input type="text" class="form-control" id="valors">
+                <label for="valor" class="form-label">Valor:</label>
+                <input type="text" class="form-control" id="valor">
             </div>
             <div class="col">
-                <label for="qtd" class="form-label">Valor</label>
+                <label for="qtd" class="form-label">Quantidade:</label>
                 <input type="text" class="form-control" id="qtd">
             </div>
             <div class="col-1 d-flex align-items-end">
-                <button type="button" class="btn btn-warning" id="btnAddProduto">
-                    <i class="bi bi-plus"></i>
-                </button>
+                <button type="button" class="btn btn-warning" id="btnAddLivro">+</button>
             </div>
-            
+          </div>
+          <div class="row">
+            <div class="col">
+              <table class="table table-hover table-striped">
+                <tbody id="tabela-corpo">
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary">Salvar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-primary">Fechar Compra</button>
         </div>
       </div>
     </div>
   </div>
 
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="toastNovaCompra" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <strong class="me-auto">Mensagem do Servidor</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                Registro Criado!
-            </div>
-        </div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastNovaCompra" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <strong class="me-auto">Resposta</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        Compra registrada com sucesso!
+      </div>
     </div>
-
+  </div>
 
   <script>
-
     const toastTrigger = document.getElementById('btnNovaCompra')
-    const toastLive = document.getElementById('toastNovaCompra')
-
-    if (toastTrigger) 
-    {
-        toastTrigger.addEventListener('click', () => 
-        {
+    const toastLiveExample = document.getElementById('toastNovaCompra')
+    if (toastTrigger) {
+        toastTrigger.addEventListener('click', () => {
             let data = document.getElementById("data").value;
             let responsavel = document.getElementById("responsavel").value;
             let url = `/compras/novo?data=${encodeURIComponent(data)}&responsavel=${encodeURIComponent(responsavel)}`;
-
-            fetch(url).then(function(response){
-                return response.json();
-            }).then(function(data){
-                const toast = new bootstrap.Toast(toastLive)
-                let elemento = document.getElementById("item-livro");
-                elemento.classList.remove('d-none');
-                toast.show()
-            })
+            fetch(url)
+                .then(function(response){
+                    return response.json();
+                }).then(function(data){
+                    const toast = new bootstrap.Toast(toastLiveExample)
+                    let elemento = document.getElementById("item-livro");
+                    elemento.classList.remove("d-none");
+                    toast.show();
+                    document.getElementById("idCompra").value = data.id;
+                });
         })
     }
 
     fetch('/compras/livros')
-    .then(function(response){
-        return response.json();
-    })
-    .then(function(data){
-        let listaLivros = document.getElementById("livros");
-        Object.keys(data).forEach(function(key){
-            let option = document.createElement('option');
-            option.value = key;
-            option.textContent = data[key].nome;
-            listaLivros.appendChild(option);
+        .then(function(response){
+            return response.json();
         })
-    })
+        .then(function(data){
+            let listaLivros = document.getElementById("livros");
+            Object.keys(data).forEach(function(key){ 
+                let option = document.createElement('option');
+                option.value = key;
+                option.textContent = data[key].nome; 
+                listaLivros.appendChild(option);
+            });
+        });
+
+    const listaLivros = document.getElementById("livros");
+    listaLivros.addEventListener('change', function(){
+      const id = listaLivros.value;
+      fetch("/compras/livro/"+id)
+        .then(function(response){
+          return response.json();
+        })
+        .then(function(data){
+          document.getElementById('valor').value = data.valor;
+        })
+        .catch(function(err){
+          console.error("Erro:", err);
+        });
+    });
+
+    const btnAddLivro = document.getElementById("btnAddLivro");
+    btnAddLivro.addEventListener("click", function(){
+      const compraId = document.getElementById("idCompra").value;
+      const livroId = document.getElementById("livros").value;
+      const livroNome = document.querySelector(`#livros option[value="${livroId}"]`).textContent;
+      const livroValor = document.getElementById("valor").value;
+      const livroQuantidade = document.getElementById("qtd").value;
+      const url =
+         `/compras/adicionarlivro/${compraId}/${livroId}/${livroNome}/${livroValor}/${livroQuantidade}`;
+      fetch(url)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          if(data.sucesso){
+            console.log("Livro inserido com sucesso!");
+            const tabela = document.getElementById("tabela-corpo");
+            const linha = document.createElement('tr');
+            linha.setAttribute('data-livro-id', livroId);
+            linha.innerHTML = `
+              <td>${livroNome}</td>
+              <td>${livroValor}</td>
+              <td>${livroQuantidade}</td>
+              <td><button>Excluir</button></td>
+            `;
+            tabela.appendChild(linha);
+          } else {
+            console.log("Erro ao inserir o livro!");
+          }
+        })
+    });
 
   </script>
